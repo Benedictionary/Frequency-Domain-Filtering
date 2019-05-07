@@ -13,19 +13,31 @@ def rgb2gray(image):
 
 grayImg = numpy.round(rgb2gray(img))
 
-#Display Grayscaled Iamge
+#Display Grayscaled Image
 mplplt.imshow(grayImg, cmap = 'gray')
 mplplt.title("Original Image in Grayscale")
 mplplt.show()
 
-a = [[1,2,3],[4,5,6],[7,8,9]]
-print("a: ", a)
-print("aMax: ", numpy.amax(a))
-print("a Normalized:", a/numpy.amax(a)*255)
-print(a[1][0])
+a = [[1,0,0,1,2,3,4,5,6,7,8,9,0,0,0],[2,0,0,1,2,3,4,5,6,7,8,9,0,0,0], [3,0,0,1,2,3,4,5,6,7,8,9,0,0,0]]
+imgXSize = 16
+imgYSize = 3
+aNew = numpy.delete(a, range((imgXSize-3-1),imgXSize), 1)
+#aNew = numpy.delete(aNew, range((imgYSize-1),imgYSize), 0)
+#aNew = numpy.delete(aNew, range(0,1), 0)
+#aNew = numpy.delete(aNew, range(0,3), 1)
+print(aNew)
+
+
+
+#print(numpy.delete(a, range(0,2), 1))
+#print("a: ", a)
+#print("aMax: ", numpy.amax(a))
+#print("a Normalized:", a/numpy.amax(a)*255)
+#print(a[1][0])
 
 #Find the Size of Each Dimension of the Original Image
-imgXSize, imgYSize = numpy.shape(grayImg)
+imgYSize, imgXSize = numpy.shape(grayImg)
+
 
 def padImage(img, imgXSize, imgYSize):
     padOneSideX = numpy.int(imgXSize/2) #numpy.int finds integer floor of argument
@@ -59,20 +71,56 @@ def DFT(centeredimg):
 
 DFTImg = DFT(centeredImg)
 magDFTImg = numpy.abs(DFTImg)
-#print(numpy.amax(magDFTImg))
-#magDFTImg = magDFTImg/numpy.amax(magDFTImg)*255
 magDFTImg = 20*numpy.log(magDFTImg)
-print("magDFTImgmax:", numpy.amax(magDFTImg))
+magDFTImg = magDFTImg/numpy.amax(magDFTImg)*255 #Normalize the magnitude spectrum
 magDFTImg = magDFTImg.astype(int)
-print("magDFTImg: " , magDFTImg)
 
 mplplt.imshow(magDFTImg, cmap = 'gray')
 mplplt.title("DFT of Image")
 mplplt.show()
 
+def iDFT(fft):
+    filteredImg = numpy.fft.ifft2(fft)
+    return filteredImg
+
+filteredImg = iDFT(DFTImg)
+filteredImg = numpy.abs(filteredImg)
+filteredImg = filteredImg.astype(int)
+print(filteredImg)
+
+mplplt.imshow(filteredImg, cmap = 'gray')
+mplplt.title("Filtered Image")
+mplplt.show()
+
+def unpad(img, imgXSize, imgYSize):
+    padOneSideX = numpy.int(imgXSize/2) #numpy.int finds integer floor of argument
+    padOneSideY = numpy.int(imgYSize/2)
+    imgUnpad = numpy.delete(img, range((imgXSize*2 - padOneSideX - 1), imgXSize*2), 1)
+    imgUnpad = numpy.delete(imgUnpad, range((imgYSize*2 - padOneSideY-1), imgYSize*2), 0)
+    imgUnpad = numpy.delete(imgUnpad, range(0, padOneSideY), 0)
+    imgUnpad = numpy.delete(imgUnpad, range(0, padOneSideX), 1)
+    return imgUnpad
+
+unpaddedFilteredImg = unpad(filteredImg, imgXSize,imgYSize)
+mplplt.imshow(unpaddedFilteredImg, cmap = 'gray')
+mplplt.title("Unpadded Filtered Image")
+mplplt.show()
 
 
-#magDFTIMG =
-#normalizedImg = a/(numpy.amax(a))
-#print(normalizedImg)
+'''
+#Function for Creating any MxN Size Gaussian Kernal based on Gaussian Formula
+def createGaussian(XSize, YSize, sigma):
+    gaussian = numpy.zeros((len, len))
+    sideXMax = numpy.int(numpy.floor(len / 2))
+    sideXMin = -sideMax
+    total = 0
+    for s in range(sideMin, sideMax+1):
+        for t in range(sideMin, sideMax + 1):
+            gaussian[s+sideMax][t+sideMax] = numpy.exp(-(s*s+t*t)/(2*sigma*sigma))
+            total += gaussian[s+sideMax][t+sideMax]
+    gaussian = gaussian/total
+    return gaussian
+'''
 
+
+print("Hello World")
