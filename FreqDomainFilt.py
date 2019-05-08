@@ -42,7 +42,6 @@ def padImage(img, imgXSize, imgYSize):
     return paddedImg
 
 paddedImg = padImage(grayImg, imgXSize, imgYSize)
-print(paddedImg)
 
 mplplt.imshow(paddedImg, cmap = 'gray')
 mplplt.title("Padded Image")
@@ -58,8 +57,6 @@ def centerImage(img, imgXSize, imgYSize):
 paddedXSize, paddedYSize = numpy.shape(paddedImg)
 
 centeredImg = centerImage(paddedImg,paddedXSize,paddedYSize)
-print(centeredImg)
-print(centeredImg[1,2])
 
 #Compute the DFT
 def DFT(centeredimg):
@@ -67,12 +64,15 @@ def DFT(centeredimg):
     return DFTImage
 
 DFTImg = DFT(centeredImg)
-magDFTImg = numpy.abs(DFTImg)
-magDFTImg = 20*numpy.log(magDFTImg)
-magDFTImg = magDFTImg.astype(int)
 
-mplplt.imshow(magDFTImg, cmap = 'gray')
-mplplt.title("DFT of Image")
+def MagnitudeSpect(DFTImg):
+    magDFTImg = numpy.abs(DFTImg)
+    magDFTImg = 20*numpy.log(magDFTImg)
+    magDFTImg = magDFTImg.astype(int)
+    return magDFTImg
+
+mplplt.imshow(MagnitudeSpect(DFTImg), cmap = 'gray')
+mplplt.title("DFT of Original Image")
 mplplt.show()
 
 DFTYSize, DFTXSize = numpy.shape(paddedImg)
@@ -98,18 +98,17 @@ gauss = createGaussian(DFTXSize,DFTYSize,100)
 
 print("SizeDFT:", numpy.shape(DFTImg))
 print("SizeGauss:", numpy.shape(gauss))
+
 gaussianFiltDFT = gauss*DFTImg
 
-magDFTImg = numpy.abs(gaussianFiltDFT)
-magDFTImg = 20*numpy.log(magDFTImg)
-print("magDFTMax: ",numpy.amax(magDFTImg))
-magDFTImg = magDFTImg.astype(int)
-
-'''
-mplplt.imshow(magDFTImg, cmap = 'gray')
+mplplt.imshow(MagnitudeSpect(gaussianFiltDFT), cmap = 'gray')
 mplplt.title("Gaussian'd DFT of Image")
 mplplt.show()
-'''
+
+def Laplacian(DFTimg):
+    laplacian = DFTImg
+    return laplacian
+
 
 #Compute the iDFT
 def iDFT(fft):
@@ -119,7 +118,6 @@ def iDFT(fft):
 filteredImg = iDFT(gaussianFiltDFT)
 filteredImg = numpy.abs(filteredImg)
 filteredImg = filteredImg.astype(int)
-print(filteredImg)
 
 mplplt.imshow(filteredImg, cmap = 'gray')
 mplplt.title("Filtered Image")
@@ -138,7 +136,5 @@ unpaddedFilteredImg = unpad(filteredImg, imgXSize,imgYSize)
 mplplt.imshow(unpaddedFilteredImg, cmap = 'gray')
 mplplt.title("Unpadded Filtered Image")
 mplplt.show()
-
-
 
 print("Hello World")
