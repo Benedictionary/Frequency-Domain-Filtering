@@ -124,13 +124,8 @@ mplplt.imshow(MagnitudeSpect(LoGFiltDFT), cmap = 'gray')
 mplplt.title("LoG'd DFT of Image")
 mplplt.show()
 
-#Compute the iDFT
-def iDFT(fft):
-    filteredImg = numpy.fft.ifft2(fft)
-    return filteredImg
-
 #Compute the iDFT of the Log Filtered Image
-filteredImg = iDFT(LoGFiltDFT)
+filteredImg = numpy.fft.ifft2(LoGFiltDFT)
 filteredImg = numpy.abs(filteredImg)
 filteredImg = filteredImg.astype(int)
 
