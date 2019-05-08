@@ -3,8 +3,8 @@ import matplotlib.pyplot as mplplt
 import matplotlib.image as mplimg
 
 ##Upload Images to Test
-#img = mplimg.imread(r'testImage.jpg')
-img = mplimg.imread(r'Monarch.jpg')
+img = mplimg.imread(r'testImage.jpg')
+#img = mplimg.imread(r'Monarch.jpg')
 
 ##Convert Image Into Grayscale
 def rgb2gray(image):
